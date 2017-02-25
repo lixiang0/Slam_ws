@@ -1,0 +1,31 @@
+<launch>
+<!--
+  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 map odom 100" /> 
+  <node pkg="tf" type="static_transform_publisher" name="link4_broadcaster" args="0 0 0 0 0 0 odom laser 100" />
+  <node pkg="tf" type="static_transform_publisher" name="link2_broadcaster" args="0 0 0 0 0 0 laser base_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="link3_broadcaster" args="0 0 0 0 0 0 base_link base_footprint 100" /> 
+-->
+
+  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0.1 0 0.05 0 0 0 base_link laser 100" /> <!--change -->
+ <!-- <node pkg="tf" type="static_transform_publisher" name="link4_broadcaster" args="0 0 0 0 0 0 map odom 100" /> change -->
+ <!-- <node pkg="tf" type="static_transform_publisher" name="link2_broadcaster" args="0 0 0 0 0 0 odom laser 100" /> change -->
+
+
+
+
+
+  <!-- Run self-filter -->
+  <node name="laser_filter" pkg="turtlebot_navigation" type="laser_footprint_filter" />
+
+  <!-- Run the map server -->
+  <arg name="map_file" default="$(find rplidar_ros)/gmapping0216.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!--- Run AMCL -->
+  <include file="$(find turtlebot_navigation)/config/amcl_turtlebot.launch">
+
+  </include>
+
+  <!--- Run Move Base -->
+  <include file="$(find turtlebot_navigation)/laser/move_base_turtlebot_laser.launch" />
+</launch>
